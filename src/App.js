@@ -23,13 +23,25 @@ export class App {
             // TodoリストをまとめるList要素
             const todoListElement = element`<ul />`;
 
-            // それぞれのTodoItem要素をtodoListElement以下へ追加する
             const todoItems = this.TodoListModel.getTodoItems();
             todoItems.forEach(item => {
-                // 追加するTodoアイテムの要素(li要素)を作成する
-                const todoItemElement = element`<li>${item.title}</li>`;
-                // TodoアイテムをtodoListElementに追加する
-                todoListElement.appendChild(todoItemElement);
+
+                const todoItemElement = item.completed
+                    ? element`<li><input type="checkbox" class="checkbox" checked><s>${item.title}</s></li>`
+                    : element`<li><input type="checkbox" class="checkbox">${item.title}</li>`;
+
+                // チェックボックスがトグルしたときのイベントにリスナー関数を登録
+                const inputCheckboxElement = todoItemElement.querySelector(".checkbox");
+                inputCheckboxElement.addEventListener("change", () => {
+                    // 指定したTodoアイテムの完了状態を反転する
+                    this.TodoListModel.updateTodo({
+                        id: item.id,
+                        completed: !item.completed
+                    });
+                });
+
+                    // TodoアイテムをtodoListElementに追加する
+                    todoListElement.appendChild(todoItemElement);
             });
 
             // コンテナ要素の中身をTodoリストをまとめるList要素で上書きする
