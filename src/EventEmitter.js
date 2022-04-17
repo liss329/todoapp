@@ -29,7 +29,6 @@ export class EventEmitter {
             return;
         }
         listenerSet.forEach(listener => {
-            console.log(this);
             listener.call(this);
         });
     }
